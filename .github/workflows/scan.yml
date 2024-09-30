@@ -17,7 +17,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: list
         run: |
-          gh repo list --limit 300 --source --no-archived --json 'name,primaryLanguage,updatedAt' >reports/dummy.json
+          gh search repos --archived=false --visibility=public --limit=3 --json='name,language,updatedAt' | tee reports/dummy.json
+          # gh repo list --limit 300 --source --no-archived --json 'name,primaryLanguage,updatedAt' >reports/dummy.json
       - name: Commit
         run: |
           git diff
