@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: list
         run: |
-          gh repo list --limit 300 --source --no-archived --json >reports/dummy.json
+          gh repo list --limit 300 --source --no-archived --json 'name,primaryLanguage,updatedAt' >reports/dummy.json
         # env:
           # GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Commit
