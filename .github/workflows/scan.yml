@@ -1,0 +1,27 @@
+name: Scan
+
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: '0 0 * * 0'
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - run: date
+      - name: list
+        run: |
+          touch reports/dummy.json
+          gh repo list --limit 300 --source --no-archived --json >reports/dummy.json
+        # env:
+          # GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit
+        run: |
+          git diff
+          git config --global user.email "bot@github.com"
+          git config --global user.name "bot"
+          git diff --quiet || (git add . && git commit -m "new report added")
+          git push
+          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
