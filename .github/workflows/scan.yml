@@ -12,10 +12,9 @@ jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
-      - run: date
+      - uses: actions/checkout@v2
       - name: list
         run: |
-          touch reports/dummy.json
           gh repo list --limit 300 --source --no-archived --json >reports/dummy.json
         # env:
           # GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
