@@ -28,6 +28,9 @@ The project targets repositories exhibiting patterns meant to exploit systems li
 
 ---
 
+WORKFLOW
+--------
+
 ```mermaid
 ---
 config:
