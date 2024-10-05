@@ -20,14 +20,24 @@ QUERY=(
   "stars:${STARS}"
 )
 
-Q=$(tr ' ' '+' <<<"${QUERY[*]}")
-U="/search/repositories?q="
+q=$(tr ' ' '+' <<<"${QUERY[*]}")
+u="/search/repositories?q="
 U+="${Q}&sort=updated&order=desc&per_page=$LIMIT"
-echo "Q:: $Q"
-echo "U:: $U"
 
-# exit
 gh api \
   -H "Accept: application/vnd.github+json" \
   -H "X-GitHub-Api-Version: 2022-11-28" \
-  "$U" >./1_search_dumps/s9.json
+  "$U" >./s1.json
+
+ # gh search repos \
+ #  --archived=false \
+ #  --visibility=public \
+ #  --sort=updated \
+ #  --language=JavaScript \
+ #  --created='>2024-04' \
+ #  --number-topics='0' \
+ #  --stars='0' \
+ #  --json="$FIELDS" \
+ #  --jq='map(.+{name,owner:.owner.login})' \
+ #  --owner=erboladaiorg \
+ #  --limit=3 |

@@ -1,0 +1,45 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+
+name: Publish to Npmjs
+
+on:
+  repository_dispatch:
+    types: [commit-change]
+
+jobs:
+  publish-npm:
+    name: Publish to Npmjs
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.client_payload.tag_name }}
+
+      - name: Get package manager config to output
+        id: package_manager
+        run: |
+          if [ -z "${{ vars.PACKAGE_MANAGER || env.PACKAGE_MANAGER || secrets.PACKAGE_MANAGER }}" ]; then
+            echo "PACKAGE_MANAGER=yarn" >> "$GITHUB_ENV"
+          else
+            echo "PACKAGE_MANAGER=${{ vars.PACKAGE_MANAGER || env.PACKAGE_MANAGER || secrets.PACKAGE_MANAGER }}" >> "$GITHUB_ENV"
+          fi
+
+      - uses: pnpm/action-setup@v3
+        if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
+        with:
+          version: 8
+  
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: https://registry.npmjs.org/
+
+      - name: Publish
+        run: |
+          npm publish --access public --registry=https://registry.npmjs.org
+
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}

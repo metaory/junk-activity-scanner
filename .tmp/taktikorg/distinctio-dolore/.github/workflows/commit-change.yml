@@ -1,0 +1,92 @@
+name: Commit Change
+on:
+  release:
+    types: [published]
+
+jobs:
+  commit-change:
+    name: Commit Changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Get package manager config to env
+        run: |
+          if [ -z "${{ vars.PACKAGE_MANAGER || env.PACKAGE_MANAGER || secrets.PACKAGE_MANAGER }}" ]; then
+            echo "PACKAGE_MANAGER=yarn" >> "$GITHUB_ENV"
+          else
+            echo "PACKAGE_MANAGER=${{ vars.PACKAGE_MANAGER || env.PACKAGE_MANAGER || secrets.PACKAGE_MANAGER }}" >> "$GITHUB_ENV"
+          fi
+          
+      - uses: pnpm/action-setup@v3
+        name: Setup pnpm
+        if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
+        with:
+          version: 8
+
+      - uses: actions/setup-node@v4
+        name: Setup NodeJS
+        with:
+          node-version: '20.x'
+          cache: ${{ (env.PACKAGE_MANAGER == 'pnpm' && hashFiles('pnpm-lock.yaml') && 'pnpm') || (env.PACKAGE_MANAGER == 'yarn' && hashFiles('yarn.lock') && 'yarn') || (env.PACKAGE_MANAGER == 'npm' && hashFiles('package-lock.json') && 'npm') || '' }}
+
+      - name: Get package name
+        run: |
+          NPM_SCOPE="${{ vars.NPM_SCOPE || env.NPM_SCOPE || secrets.NPM_SCOPE || github.repository_owner }}"
+          PACKAGE_NAME="@${NPM_SCOPE##*@}/${{ github.event.repository.name }}"
+          echo "PACKAGE_NAME=${PACKAGE_NAME}" >> "$GITHUB_OUTPUT"
+        id: package_name
+        
+      - name: Copy Package Info
+        if: ${{ hashFiles('.github/action/action.js') }}
+        run: |
+          cd .github/action
+          npm ci
+          node action.js --github="${{ secrets.GITHUB_TOKEN }}" --owner="${{ github.repository_owner }}" --repo="${{ github.event.repository.full_name }}" --package="${{ steps.package_name.outputs.PACKAGE_NAME }}" --repourl="${{ github.event.repository.html_url }}"
+          cd ../..
+          rm -rf .github/action/action.js
+
+      - name: Set package info
+        run: |
+          npm pkg set name="${{ steps.package_name.outputs.PACKAGE_NAME }}"
+          npm pkg set version=${{ github.event.release.tag_name }}
+          npm pkg set 'repository.type'="git"
+          npm pkg set 'repository.url'="${{ github.event.repository.html_url }}.git"
+          npm pkg set 'homepage'="${{ github.event.repository.html_url }}/#readme"
+          npm pkg set 'bugs.url'="${{ github.event.repository.html_url }}/issues"
+          npm pkg set 'author'="${{ github.triggering_actor }}"
+
+      - name: Install preconfig dependencies if exists
+        continue-on-error: true
+        run: |
+          INSTALL_PACKAGE="${{ vars.PACKAGES || env.PACKAGES || secrets.PACKAGES }}"
+          if [ "${{ env.PACKAGE_MANAGER }}" == "npm" ]; then
+            npm install ${INSTALL_PACKAGE}
+          else
+            ${{ env.PACKAGE_MANAGER }} add ${INSTALL_PACKAGE}
+          fi
+        env:
+          NODE_OPTIONS: --max_old_space_size=10240
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'New updated version ${{ github.event.release.tag_name }}'
+          push_options: --force
+
+      - name: Change tag reference
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git tag -fa ${{ github.event.release.tag_name }} -m "Release version ${{ github.event.release.tag_name }}"
+          git push origin -f --tags
+
+      - name: Dispatch event
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          repository: ${{ github.event.repository.full_name }}
+          event-type: commit-change
+          client-payload: '{"tag_name": "${{ github.event.release.tag_name }}"}'

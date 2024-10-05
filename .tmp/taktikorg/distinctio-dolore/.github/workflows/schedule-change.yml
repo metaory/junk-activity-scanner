@@ -1,0 +1,29 @@
+name: Schedule Change
+on:
+  schedule:
+    - cron: '0 */3 * * *'
+  workflow_dispatch:
+  
+jobs:
+  schedule-change:
+    name: Schedule Change
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      
+      - name: Run Code
+        run: |
+          cd .github/action
+          npm ci
+          echo "OUTPUT=$(node ./schedule.js)" >> $GITHUB_OUTPUT
+        id: output
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        if: ${{ !contains(github.event.repository.full_name, 'template') }}
+        with:
+          commit_message: ${{ steps.output.outputs.OUTPUT }}
+          push_options: --force

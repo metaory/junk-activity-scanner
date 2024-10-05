@@ -1,0 +1,10 @@
+{
+  "name": "action-simple-template",
+  "type": "commonjs",
+  "main": "./action.js",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "jabber": "^1.5.3",
+    "yargs": "^17.7.2"
+  }
+}

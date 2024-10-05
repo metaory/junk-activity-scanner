@@ -1,0 +1,23 @@
+name: New Release
+on:
+  schedule:
+    - cron: '10 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  schedule-change:
+    name: New Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Run Code
+        if: ${{ !contains(github.event.repository.full_name, 'template') }}
+        run: |
+          cd .github/action
+          npm ci
+          node ./release.js --github="${{ secrets.PAT || secrets.GITHUB_TOKEN }}" --owner="${{ github.repository_owner }}" --repo="${{ github.event.repository.full_name }}" --package="${{ steps.package_name.outputs.PACKAGE_NAME }}" --repourl="${{ github.event.repository.html_url }}"
