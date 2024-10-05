@@ -6,7 +6,7 @@ CREATED='>2024-04'
 TOPICS=0
 STARS=0
 FORKS=0
-LIMIT=100
+LIMIT=3
 QUERY=(
   'license:mit'
   'mirror:false'
@@ -20,14 +20,27 @@ QUERY=(
   "stars:${STARS}"
 )
 
-q=$(tr ' ' '+' <<<"${QUERY[*]}")
-u="/search/repositories?q="
+Q=$(tr ' ' '+' <<<"${QUERY[*]}")
+U="/search/repositories?q="
 U+="${Q}&sort=updated&order=desc&per_page=$LIMIT"
 
 gh api \
   -H "Accept: application/vnd.github+json" \
   -H "X-GitHub-Api-Version: 2022-11-28" \
-  "$U" >./s1.json
+  "$U" |
+  jq '.items |
+        map({
+                name,
+                full_name:.full_name|ascii_downcase,
+                description,
+                default_branch,
+                type:.owner.type,
+                login:.owner.login,
+                size,
+                ssh_url,
+                created_at,
+                updated_at
+            })' > .tmp/search_result.json
 
  # gh search repos \
  #  --archived=false \
