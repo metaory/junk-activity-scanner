@@ -4,7 +4,7 @@ set -Eeuo pipefail
 [ -t 0 ] && {
   echo ' [ERROR] STREAM IS INTERACTIVE
   try running
-    cat sample_input.json | bash main.sh'
+    echo <PATH> | bash main.sh'
   exit
 }
 
@@ -12,9 +12,7 @@ declare INPUT
 
 while read -r L; do INPUT+=$L; done
 
-echo "evaluating ..."
-
-jq '.' <<< "$INPUT"
+echo "evaluating ... $INPUT"
 
 #  ...
 #  .. INSPECT LOGIC ..

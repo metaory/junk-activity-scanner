@@ -1,6 +1,6 @@
-import sys, json
+import sys
 
-raw = sys.stdin.read()
+input = sys.stdin.read()
 
 
 def evaluate(repo):
@@ -14,13 +14,8 @@ if sys.stdout.isatty():
         """ [ERROR] STREAM IS INTERACTIVE
 
   try running
-    cat sample_input.json | python . """
+    echo <PATH> | python . """
     )
     sys.exit(1)
 
-try:
-    input = json.loads(raw)
-    print(evaluate(input))
-except json.JSONDecodeError as e:
-    print("Invalid JSON syntax:", e)
-    sys.exit(1)
+print(evaluate(input))

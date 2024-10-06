@@ -3,11 +3,16 @@ EVALUATORS
 
 `./evals/<NAME>/`
 
-Every dir under this path with a `config.toml` an **inspector**.
+Every dir under this path with a `config.toml` is an **evaluator**.
 
-Evaluators are executed for each repository.
+Evaluators are executed for each scanned repository.
 
-They receive repository details in **standard input**.
+For each execution they receive a path in **standard input** where the target repository info are located.
+
+Evaluators read the target `detail.json` and `tree.json`. They can request file contents for analysis from the
+content provider API.
+
+Evaluators are expected to produce a single final **confidence score**.
 
 The **confidence score** is a number between **0** and **1**, higher value indicates more confidence
 in input being a **junk**.
@@ -18,10 +23,10 @@ API CONTRACT
 ------------
 
 ### STDIN
-The stringified repository detail is read from **stdin**
+A path pointing to `detail.json` and `tree.json` of the target repository in **stdin**
 
 ### STDOUT
-Inspector are expected to output their **confidence score** to **stdout**
+Evaluators are expected to output their **confidence score** to **stdout**
 
 > [!Tip]
 > The evaluator outputs in their execution are ignored.

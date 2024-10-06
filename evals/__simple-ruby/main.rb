@@ -1,19 +1,12 @@
-require 'json'
-
 if $stdin.tty?
   puts " [ERROR] STREAM IS INTERACTIVE
 
   try running
-  cat sample_input.json | ruby main.rb"
+  echo <PATH> | ruby main.rb"
   exit 1
 end
 
-begin
-  input = JSON.parse(STDIN.read.strip)
-rescue JSON::ParserError => e
-  puts e.message
-  exit 1
-end
+input = STDIN.read.strip
 
 def evaluate(repo)
   puts("evaluating...", repo, "\n")
