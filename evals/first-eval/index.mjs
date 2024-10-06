@@ -1,7 +1,6 @@
 import { stdin, stdout } from 'node:process'
 import { Readable } from 'node:stream'
-import { readFile } from 'node:fs'
-import { readdir } from 'node:fs'
+import { readdir, readFile } from 'node:fs/promises'
 
 const stream = stdin.resume()
 
