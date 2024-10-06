@@ -26,28 +26,41 @@ SEARCHPARAMS=(
   "order=desc"
   "per_page=$LIMIT"
 )
+I=0
+J=0
 
+rm -rf /tmp/junk/* &>/dev/null || :
 mkdir -p /tmp/junk &>/dev/null || :
 
-while read -r REPO; do
+while read -r detail; do
+  (( I++ ))
   read -r -d '\n' user name full_name default_branch < <(
-    jq -r '.user,.name,.full_name,.default_branch' <<<"$REPO"
+    jq -r '.user,.name,.full_name,.default_branch' <<<"$detail"
   )
+  echo "[${I}/${LIMIT}] indexing -- ${full_name}"
 
   base="/tmp/junk/${user}/${name}"
 
   mkdir -p "$base" &>/dev/null || :
 
-  jq '.' <<<"$REPO" >"${base}/detail.json"
-
-  gh api \
+  trees=$(gh api \
     -H "Accept: application/vnd.github.raw+json" \
     -H "$GH_API_VER" \
     "/repos/${full_name}/git/trees/${default_branch}?recursive=true" |
-    jq '.tree|map(select(.type == "blob"))|map([.path,.size,.sha])' |
-    tee "${base}/tree.json"
+    jq '.tree|
+      map(select(.type == "blob"))|
+      map([.path,.sha,.size])|. as $in|
+      map(.[0]|startswith(".github/workflows"))|any|
+      if . == true then $in end')
 
-  echo "indexed ${full_name}"
+  if ("$trees"); then
+    (( J++ ))
+    echo "[${J}/${I}] met pre-condition -- ${full_name}"
+    jq '.' <<<"$detail" >"${base}/detail.json"
+    jq '.' <<<"$trees" >"${base}/tree.json"
+  fi
+
+  echo "[${J}/${LIMIT}] indexing completed -- ${full_name}"
 done < <(gh api \
   -H "Accept: application/vnd.github+json" \
   -H "$GH_API_VER" \
