@@ -88,6 +88,8 @@ EXAMPLE FILES
 CONTENT PROVIDER
 ----------------
 
+Content provider handles data caching across executions.
+
 ### Bash
 ```sh
 # bash lib/content.sh USER/REPO PATH
@@ -98,16 +100,15 @@ bash lib/content.sh some-user/some-repo .github/workflows/deploy.yml
 
 ### Node
 ```js
-import readFile from 'node:fsPromises'
-import provider from '../../lib/content-js/index.mjs'
+import readContent from '../../lib/content-js/index.mjs'
 
-// REQUEST FILE
-const res = await provider('some-user/some-repo', '.github/workflows/deploy.yml')
-// /tmp/junk/some-user/some-repo/.github/workflows/deploy.yml
-
-// READ CONTENT
-const content = await readFile (res, { encoding: 'utf8' })
+const res = readContent('some-user/some-repo', '.github/workflows/deploy.yml')
 ```
+
+> [!Tip]
+> Checkout the sample node evaluator
+>
+> - `Node` -- [simple-node/index.mjs](__simple-node/index.mjs)
 
 ---
 

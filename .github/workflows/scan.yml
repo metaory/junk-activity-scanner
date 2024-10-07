@@ -1,4 +1,4 @@
-name: Scan JS Repos
+name: JUNK
 
 on:
   # push:
@@ -12,23 +12,18 @@ on:
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
-  scan:
+  scan-js:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: list
-        run: |
-          gh search repos \
-            --archived=false \
-            --visibility=public \
-            --include-forks=only \
-            --sort=updated \
-            --language=JavaScript \
-            --created='>2024-04' \
-            --json='name,stargazersCount,language,updatedAt' \
-            --limit=3 |
-            tee reports/dummy.json
-          # gh repo list --limit 300 --source --no-archived --json 'name,primaryLanguage,updatedAt' >reports/dummy.json
+      - name: scan
+        run: bash .github/scripts/scan.sh
+      - name: eval
+        run: echo "bash .github/scripts/eval.sh"
+        # run: bash .github/scripts/eval.sh
+      - name: report
+        run: echo "bash .github/scripts/report.sh"
+        # run: bash .github/scripts/report.sh
       - name: Commit
         run: |
           git diff

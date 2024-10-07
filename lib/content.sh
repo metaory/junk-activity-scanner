@@ -9,15 +9,15 @@ FILE_PATH="/tmp/junk/${FULL_NAME}/${FULL_PATH}"
 mkdir -p "$(dirname $FILE_PATH)" &>/dev/null || :
 
 if [ -f "$FILE_PATH" ]; then
-  echo "$FILE_PATH"
+  printf "$FILE_PATH"
   exit 0
 fi
 
 gh api \
   -H "Accept: application/vnd.github.raw+object" \
   -H "$GH_API_VER" \
-  "/repos/${FULL_NAME}/contents/${FULL_PATH}" > "${FILE_PATH}"
+  "/repos/${FULL_NAME}/contents/${FULL_PATH}" > "${FILE_PATH}" &>/dev/null || :
 
-echo "$FILE_PATH"
+printf "$FILE_PATH"
 
 # vim: ft=bash
