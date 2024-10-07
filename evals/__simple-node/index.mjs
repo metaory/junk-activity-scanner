@@ -1,6 +1,6 @@
 import { stdin, stdout } from 'node:process'
 import { Readable } from 'node:stream'
-// import { Readable } from 'node:stream'
+import provider from '../../lib/content-js/index.mjs'
 
 const stream = stdin.resume()
 
@@ -11,10 +11,11 @@ if (stdin.isTTY || !stream.readable) {
   process.exit(1)
 }
 
-const input = await Readable.from(stream).reduce((acc, cur) => (acc += cur), '')
+const input = (await Readable.from(stream).reduce((acc, cur) => (acc += cur), '')).trim()
 
-const evaluate = repo => {
+const evaluate = async (repo) => {
   console.log('evaluating', repo)
+  // const res = await provider(repo, '.github/workflows/deploy.yml')
   // ...
   // .. INSPECT LOGIC ..
   // ☇ DEMONSTRATION PURPOSE

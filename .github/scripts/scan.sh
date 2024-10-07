@@ -7,7 +7,7 @@ CREATED='>2024-04'
 TOPICS=0
 STARS=0
 FORKS=0
-LIMIT=3
+LIMIT=20
 QUERY=(
   'license:mit'
   'mirror:false'
@@ -41,10 +41,8 @@ while read -r detail; do
 
   base="/tmp/junk/${user}/${name}"
 
-  mkdir -p "$base" &>/dev/null || :
-
   trees=$(gh api \
-    -H "Accept: application/vnd.github.raw+json" \
+    -H "Accept: application/vnd.github+json" \
     -H "$GH_API_VER" \
     "/repos/${full_name}/git/trees/${default_branch}?recursive=true" |
     jq '.tree|
@@ -53,14 +51,15 @@ while read -r detail; do
       map(.[0]|startswith(".github/workflows"))|any|
       if . == true then $in end')
 
-  if ("$trees"); then
+  if ! [ "$trees" == false ]; then
     (( J++ ))
-    echo "[${J}/${I}] met pre-condition -- ${full_name}"
+    echo "[${I}/${LIMIT}](${J}) met pre-condition -- ${full_name}"
+    mkdir -p "$base" &>/dev/null || :
     jq '.' <<<"$detail" >"${base}/detail.json"
     jq '.' <<<"$trees" >"${base}/tree.json"
   fi
 
-  echo "[${J}/${LIMIT}] indexing completed -- ${full_name}"
+  echo -e "[${I}/${LIMIT}] complete -- ${full_name} \n"
 done < <(gh api \
   -H "Accept: application/vnd.github+json" \
   -H "$GH_API_VER" \
