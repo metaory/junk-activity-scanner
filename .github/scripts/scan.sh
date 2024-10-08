@@ -7,7 +7,7 @@ CREATED='>2024-04'
 TOPICS=0
 STARS=0
 FORKS=0
-LIMIT=20
+LIMIT=40
 QUERY=(
   'license:mit'
   'mirror:false'

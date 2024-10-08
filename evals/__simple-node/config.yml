@@ -1,22 +1,24 @@
 # Display name of the inspector (OPTIONAL)
 # Default: directory path
-name = "Simple Bash Inspector"
+name: "Simple Node Inspector"
 
 # Development flag
 # Default: true
-enabled = false
+enabled: true
 
 # Inspector timeout in seconds (OPTIONAL)
 # Default: 6
 # Min-Max: 3-30
-timeout = 10
+timeout: 10
 
 # Inspector (REQUIRED)
 # It must be installed and available on action runner, It's logged and ignored otherwise.
-command = "bash"
+command: "node"
 
 # Inspector runner (OPTIONAL)
 # Default: []
-arguments = [
-  "main.sh"
-]
+arguments:
+  --trace-warnings
+  --trace-uncaught
+  --experimental-default-type=module
+  index.mjs"

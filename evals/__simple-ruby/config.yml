@@ -1,25 +1,21 @@
 # Display name of the inspector (OPTIONAL)
 # Default: directory path
-name = "Simple Node Inspector"
+name: "Simple Ruby Inspector"
 
 # Development flag
 # Default: true
-enabled = false
+enabled: false
 
 # Inspector timeout in seconds (OPTIONAL)
 # Default: 6
 # Min-Max: 3-30
-timeout = 10
+timeout: 10
 
 # Inspector (REQUIRED)
 # It must be installed and available on action runner, It's logged and ignored otherwise.
-command = "node"
+command: "ruby"
 
 # Inspector runner (OPTIONAL)
 # Default: []
-arguments = [
-  "--trace-warnings",
-  "--trace-uncaught",
-  "--experimental-default-type=module",
-  "index.mjs",
-]
+arguments:
+  main.rb

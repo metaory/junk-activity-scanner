@@ -3,7 +3,7 @@ EVALUATORS
 
 `./evals/<NAME>/`
 
-Every dir under this path with a `config.toml` is an **evaluator**.
+Every dir under this path with a `config.yml` is an **evaluator**.
 
 Evaluators are executed for each scanned repository.
 
@@ -117,37 +117,36 @@ CONFIG
 
 Each configuration allows to selectively override the defaults launch command, option flags and arguments.
 
-`./evals/<NAME>/config.toml`
+`./evals/<NAME>/config.yml`
 
 ---
 
 Example config:
 
-```toml
+```yml
 # Display name of the inspector (OPTIONAL)
 # Default: directory path
-name = "simple node inspector"
+name: "simple node inspector"
 
 # Development flag
 # Default: true
-enabled = false
+enabled: false
 
 # Inspector timeout in seconds (OPTIONAL)
 # Default: 6
 # Min-Max: 3-30
-timeout = 10
+timeout: 10
 
 # Inspector (REQUIRED)
 # It must be installed and available on action runner, It's logged and ignored otherwise.
-command = "node"
+command: "node"
 
 # Inspector runner (REQUIRED)
-arguments = [
-  "--trace-warnings",
-  "--trace-uncaught",
-  "--experimental-default-type=module",
-  "index.mjs",
-]
+arguments:
+  --trace-warnings
+  --trace-uncaught
+  --experimental-default-type=module
+  index.mjs
 ```
 
 ---
