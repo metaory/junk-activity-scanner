@@ -21,4 +21,4 @@ arguments:
   --trace-warnings
   --trace-uncaught
   --experimental-default-type=module
-  index.mjs"
+  index.mjs
