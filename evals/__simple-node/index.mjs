@@ -18,8 +18,8 @@ const read = path => readFileSync(path, { encoding: 'utf8' })
 const readJson = path => JSON.parse(read(path))
 
 const evaluate = repo => {
-  const detail = readJson(`/tmp/junk/${repo}/detail.json`)
-  const tree = readJson(`/tmp/junk/${repo}/tree.json`)
+  const detail = readJson(`${repo}/detail.json`)
+  const tree = readJson(`${repo}/tree.json`)
 
   console.log('detail', detail)
 
