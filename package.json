@@ -1,0 +1,13 @@
+{
+  "name": "junk-activity-scanner",
+  "version": "0.0.1",
+  "description": "An automated tool that scans and reports bot-generated junk repositories to combat inauthentic activity",
+  "main": "index.js",
+  "scripts": {
+    "dev:eval": "",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "metaory <metaory@gmail.com>",
+  "license": "MIT"
+}

@@ -1,0 +1,21 @@
+# Display name of the inspector (OPTIONAL)
+# Default: directory path
+name: "Simple Bash Inspector"
+
+# Development flag
+# Default: true
+enabled: false
+
+# Inspector timeout in seconds (OPTIONAL)
+# Default: 6
+# Min-Max: 3-30
+timeout: 10
+
+# Inspector (REQUIRED)
+# It must be installed and available on action runner, It's logged and ignored otherwise.
+command: "bash"
+
+# Inspector runner (OPTIONAL)
+# Default: []
+arguments:
+  main.sh
