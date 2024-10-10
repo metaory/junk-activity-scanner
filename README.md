@@ -1,7 +1,8 @@
 <div align="center">
   <img src=".github/assets/logo.png" width="168px"/>
-  <h2>JUNK-ACTIVITY-SCANNER</h2>
-  <h4>An automated tool that scans and reports bot-generated junk repositories to combat inauthentic activity.</h4>
+  <h2>JUNK-ACTIVITY</h2>
+  <h3>SCANNER</h3>
+  <h4>An automated tool that scans and reports bot-generated junk repositories to combat inauthentic activity</h4>
 </div>
 
 ---
