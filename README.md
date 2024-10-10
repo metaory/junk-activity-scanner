@@ -9,7 +9,10 @@
 <div align="center">
   <a href="#why">Why</a> |
   <a href="#key-features">Key Features</a> |
-  <a href="#use-cases">Use cases</a> |
+  <a href="#use-cases">Use cases</a>
+</div>
+ 
+<div align="center">
   <a href="#process">Process</a> |
   <a href="#contribution">Contribution</a> |
   <a href="https://github.com/metaory/junk-activity-scanner/issues/new">Issue?</a>
@@ -17,19 +20,19 @@
 
 ---
 
-Why
+WHY
+---
+- TODO
+
+---
+
+KEY FEATURES
 ------------
 - TODO
 
 ---
 
-Key Features
-------------
-- TODO
-
----
-
-Use cases
+USE CASES
 ---------
 - TODO
 
