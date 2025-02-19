@@ -23,7 +23,7 @@
 
 WHY
 ---
-- TODO
+- Newly created repositories have been spoofed on GitHub, by an automated atack where an LLM is used to take the repo README and modify it into a new repo under a similar name to then release malware. This has been happening for months and could lead to serious security breaches and undermining the trust in the platform and the integrity of open-source projects
 
 ---
 
